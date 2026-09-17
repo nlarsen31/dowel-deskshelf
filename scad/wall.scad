@@ -21,6 +21,26 @@ module rounded_box(size, r) {
     }
 }
 
+// A blind bore of diameter d and depth `depth`, aligned along +Z from
+// z=0 (blind end) to z=depth (opening), with a concave fillet of radius
+// `fillet_r` rounding the edge where the bore meets the opening face.
+// Extends 1mm past z=depth so the opening cuts cleanly through a face.
+module rounded_bore(d, depth, fillet_r) {
+    r = d / 2;
+    steps = 8;
+    arc = [for (i = [0 : steps])
+        let (theta = 180 - i * (90 / steps))
+        [r + fillet_r + fillet_r * cos(theta), (depth - fillet_r) + fillet_r * sin(theta)]
+    ];
+    profile = concat(
+        [[0, 0], [r, 0]],
+        arc,
+        [[r + fillet_r, depth + 1], [0, depth + 1]]
+    );
+    rotate_extrude(angle = 360)
+        polygon(points = profile);
+}
+
 module wall_bracket() {
     difference() {
         // Main block, flush against the wall on its back (X=0) face,
@@ -34,7 +54,7 @@ module wall_bracket() {
             z = wall_bracket_height - dowel_row_offset;
             translate([wall_bracket_depth - dowel_bore_depth, y, z])
                 rotate([0, 90, 0])
-                    cylinder(h = dowel_bore_depth + 1, d = dowel_bore_d);
+                    rounded_bore(dowel_bore_d, dowel_bore_depth, dowel_fillet_r);
         }
 
         // Rubber foot recesses: shallow pockets in the bottom face,
