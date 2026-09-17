@@ -1,5 +1,5 @@
 // Wall-end bracket: 3D-printed piece that mounts to the wall and
-// captures one end of a wooden dowel shelf support.
+// captures one end of each dowel in a row of wooden dowel shelf supports.
 //
 // Render a single bracket:
 //   openscad -o export/wall.stl scad/wall.scad
@@ -11,32 +11,38 @@ include <lib/params.scad>
 
 render_pair = false;
 
+// Box with all 12 edges filleted to radius r, spanning [0,0,0] to size.
+module rounded_box(size, r) {
+    hull() {
+        for (x = [r, size[0] - r])
+            for (y = [r, size[1] - r])
+                for (z = [r, size[2] - r])
+                    translate([x, y, z]) sphere(r = r);
+    }
+}
+
 module wall_bracket() {
-    bore_d = dowel_diameter + dowel_tolerance;
-
     difference() {
-        // Main block, flush against the wall on its back (X=0) face.
-        cube([wall_bracket_depth, wall_bracket_width, wall_bracket_height]);
+        // Main block, flush against the wall on its back (X=0) face,
+        // with rounded corners/edges everywhere.
+        rounded_box([wall_bracket_depth, wall_bracket_width, wall_bracket_height], corner_radius);
 
-        // Dowel socket: blind hole bored in from the front face,
-        // centered on the block, running along the depth (X) axis.
-        translate([wall_bracket_depth - dowel_bore_depth,
-                   wall_bracket_width / 2,
-                   wall_bracket_height / 2])
-            rotate([0, 90, 0])
-                cylinder(h = dowel_bore_depth + 1, d = bore_d);
-
-        // Wall mounting holes: through-holes along the depth axis,
-        // near the back face, evenly spaced vertically.
-        for (i = [0 : mount_hole_count - 1]) {
-            frac = (mount_hole_count == 1) ? 0.5
-                 : mount_hole_inset / wall_bracket_height
-                   + i * (wall_bracket_height - 2 * mount_hole_inset)
-                     / (wall_bracket_height * (mount_hole_count - 1));
-            translate([-1, wall_bracket_width / 2, frac * wall_bracket_height])
+        // Dowel row: blind holes bored in from the front face, running
+        // along the depth (X) axis, evenly spaced along the top edge.
+        for (i = [0 : num_dowels - 1]) {
+            y = dowel_edge_margin + dowel_bore_d / 2 + i * dowel_spacing;
+            z = wall_bracket_height - dowel_row_offset;
+            translate([wall_bracket_depth - dowel_bore_depth, y, z])
                 rotate([0, 90, 0])
-                    cylinder(h = wall_bracket_depth + 2, d = mount_hole_diameter);
+                    cylinder(h = dowel_bore_depth + 1, d = dowel_bore_d);
         }
+
+        // Rubber foot recesses: shallow pockets in the bottom face,
+        // one near each of the four bottom corners.
+        for (x = [foot_inset, wall_bracket_depth - foot_inset])
+            for (y = [foot_inset, wall_bracket_width - foot_inset])
+                translate([x, y, -0.1])
+                    cylinder(h = foot_recess_depth + 0.1, d = foot_diameter);
     }
 }
 
