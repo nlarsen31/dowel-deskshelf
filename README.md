@@ -35,6 +35,18 @@ openscad scad/wall.scad          # open in the OpenSCAD GUI
 openscad -o export/wall.stl scad/wall.scad
 ```
 
+## Versions
+
+A rendered image of each meaningful revision is kept under `docs/images/`
+for a visual record of how the design evolved.
+
+### v0
+
+Wall bracket: 6-dowel row along the top edge, rounded corners, filleted
+dowel bore openings, rubber foot recesses on the bottom face.
+
+![v0](docs/images/v0.png)
+
 ## Tuning to your dowels and wall
 
 Edit `scad/lib/params.scad`:
