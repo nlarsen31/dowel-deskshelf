@@ -1,0 +1,13 @@
+# Rendered/exported models (regenerate with `make`)
+export/*.stl
+export/*.3mf
+export/*.amf
+export/*.off
+
+# OpenSCAD backup files
+*.scad.bak
+*.echo
+
+# Editor/OS cruft
+.DS_Store
+*.swp
