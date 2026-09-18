@@ -48,12 +48,10 @@ shelf_slot_h = shelf_thickness + shelf_clearance;
 shelf_slot_w = wall_bracket_width -  shelf_slot_margin; // slot's extent along Y
 
 // --- Shelf panel ---
-// The panel that actually slides into the slot above. Its length is
-// derived from dowel_length_in so it spans the same wall-to-wall gap as
-// the dowels: the dowel's embedded ends (dowel_bore_depth each) are
-// replaced by the panel's own embedded ends (shelf_slot_depth each).
+// The panel that actually slides into the slot above.
 shelf_width_clearance = 0.5; // subtracted from the slot width for an easy slide fit
-shelf_length = dowel_length - 2 * dowel_bore_depth + 2 * shelf_slot_depth;
+// shelf_length = dowel_length - 2 * dowel_bore_depth + 2 * shelf_slot_depth; // total panel length, including the ends captured in each bracket's slot
+shelf_length = 420;
 shelf_width  = shelf_slot_w - shelf_width_clearance;
 
 // --- Rubber feet ---

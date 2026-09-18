@@ -33,20 +33,57 @@ module rounded_bore(d, depth, fillet_r) {
         polygon(points = profile);
 }
 
-module wall_bracket() {
+// A bore of diameter d and length `length` that runs the full length,
+// open at both ends with a matching concave fillet of radius `fillet_r`
+// rounding both openings. Used for a middle bracket the dowels pass
+// through, as opposed to the wall-end brackets where they stop blind.
+module through_bore(d, length, fillet_r) {
+    r = d / 2;
+    steps = 8;
+    bottom_arc = [for (i = [0 : steps])
+        let (theta = 270 - i * (90 / steps))
+        [r + fillet_r + fillet_r * cos(theta), fillet_r + fillet_r * sin(theta)]
+    ];
+    top_arc = [for (i = [0 : steps])
+        let (theta = 180 - i * (90 / steps))
+        [r + fillet_r + fillet_r * cos(theta), (length - fillet_r) + fillet_r * sin(theta)]
+    ];
+    profile = concat(
+        [[0, -1], [r + fillet_r, -1]],
+        bottom_arc,
+        top_arc,
+        [[r + fillet_r, length + 1], [0, length + 1]]
+    );
+    rotate_extrude(angle = 360)
+        polygon(points = profile);
+}
+
+// through_dowels=false (default): wall-end bracket, dowels stop blind
+// inside it. through_dowels=true: middle bracket, dowels pass all the
+// way through so the shelf doesn't have to span the full wall-to-wall
+// distance in one piece.
+module wall_bracket(through_dowels = false) {
     difference() {
         // Main block, flush against the wall on its back (X=0) face,
         // with rounded corners/edges everywhere.
         rounded_box([wall_bracket_depth, wall_bracket_width, wall_bracket_height], corner_radius);
 
-        // Dowel row: blind holes bored in from the front face, running
-        // along the depth (X) axis, evenly spaced along the top edge.
+        // Dowel row: bored in from the front face, running along the
+        // depth (X) axis, evenly spaced along the top edge. Blind unless
+        // through_dowels is set, in which case they pass all the way
+        // through to the back face.
         for (i = [0 : num_dowels - 1]) {
             y = dowel_edge_margin + dowel_bore_d / 2 + i * dowel_spacing;
             z = wall_bracket_height - dowel_row_offset;
-            translate([wall_bracket_depth - dowel_bore_depth, y, z])
-                rotate([0, 90, 0])
-                    rounded_bore(dowel_bore_d, dowel_bore_depth, dowel_fillet_r);
+            if (through_dowels) {
+                translate([0, y, z])
+                    rotate([0, 90, 0])
+                        through_bore(dowel_bore_d, wall_bracket_depth, dowel_fillet_r);
+            } else {
+                translate([wall_bracket_depth - dowel_bore_depth, y, z])
+                    rotate([0, 90, 0])
+                        rounded_bore(dowel_bore_d, dowel_bore_depth, dowel_fillet_r);
+            }
         }
 
         // Shelf panel slot: open on the same front face as the dowel
