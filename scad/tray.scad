@@ -7,28 +7,7 @@
 // Render:
 //   openscad -o export/tray.stl scad/tray.scad
 
-include <lib/bracket.scad>
-
-function dowel_y(i) = dowel_edge_margin + dowel_bore_d / 2 + i * dowel_spacing;
-
-// Cross-section of a clip in (y, z): y in [0, w], z in [-h, 1], sharp
-// everywhere except the outer bottom corner (at y=0, z=-h), which is
-// rounded. The +1 overlaps the slab so the two fuse.
-module clip_profile(w, h, r) {
-    rc = max(min(r, h), 0.01);
-    hull() {
-        translate([rc, -h + rc]) circle(r = rc);
-        translate([0, -h + rc]) square([w, h + 1 - rc]);
-        translate([rc, -h]) square([w - rc, h + 1]);
-    }
-}
-
-// Extrudes clip_profile along X. Outer (rounded) side is at low Y.
-module clip(w, h, r) {
-    rotate([90, 0, 90])
-        linear_extrude(height = tray_length)
-            clip_profile(w, h, r);
-}
+include <lib/tray_common.scad>
 
 module tray() {
     // Each clip only covers the outer half: from the tray's outer edge
@@ -41,12 +20,12 @@ module tray() {
 
             // First dowel: outer side is low Y.
             translate([0, dowel_y(0) - clip_w, 0])
-                clip(clip_w, tray_wrap_depth, tray_corner_radius);
+                clip(clip_w, tray_wrap_depth, tray_corner_radius, tray_length);
 
             // Last dowel: mirrored so the outer side is high Y.
             translate([0, dowel_y(num_dowels - 1) + clip_w, 0])
                 mirror([0, 1, 0])
-                    clip(clip_w, tray_wrap_depth, tray_corner_radius);
+                    clip(clip_w, tray_wrap_depth, tray_corner_radius, tray_length);
         }
 
         for (i = [0 : num_dowels - 1])

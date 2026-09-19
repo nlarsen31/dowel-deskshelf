@@ -10,6 +10,46 @@ and has a row of bored sockets that dowel ends press/slide into, plus a
 slot for the slide-in shelf panel. How the bracket actually attaches to
 the wall comes later.
 
+## Components
+
+Each of these is printed on its own (see Building below) and combined
+physically to assemble the shelf.
+
+- **`wall.scad`** / **`wall_mirrored.scad`** — the two end brackets that
+  mount to the wall at each side of the shelf. Each has a row of bored
+  sockets that one end of each dowel presses/slides into, plus a slot
+  that the shelf panel slides into. `wall_mirrored.scad` is a mirror
+  image of `wall.scad` so the dowels and panel are captured at both
+  ends of the span.
+- **`wall_through.scad`** / **`wall_through_mirrored.scad`** — an
+  intermediate bracket for the same dowel row, used partway along a long
+  span instead of at a wall. Unlike the end brackets, the dowels pass
+  all the way through rather than stopping blind, so the run can
+  continue past it (e.g. into a second segment covered by another tray
+  or shelf panel). It still has the same shelf-panel slot as the end
+  brackets.
+- **`shelf.scad`** — the flat, slide-in shelf panel. Its two ends are
+  captured by the slot in a pair of brackets, spanning the same
+  wall-to-wall gap as the dowels; its length is derived from your dowel
+  stock length so the two line up.
+- **`tray.scad`** — an alternative, flat-top surface that rests on top
+  of the dowels instead of (or alongside) the slide-in panel: a slab
+  with a half-round channel on the underside for each dowel, with
+  snap-fit clips around the two outer dowels so it clips down onto the
+  row rather than just resting loose. Sized to fit a typical 256x256mm
+  print bed, so a long run is covered by printing multiple trays end to
+  end.
+- **`half_shelf.scad`** — a shorter, reinforced version of the shelf
+  panel for spots where a full wall-to-wall panel doesn't make sense —
+  e.g. supporting a laptop that sits across a gap between two brackets.
+  It slides into the same bracket slot as `shelf.scad` on only one end
+  and cantilevers out toward the middle, with extra material tapered in
+  near the slot (where the bending load is highest) for stiffness, and
+  an optional drop-down leg to rest on the desk if the cantilever alone
+  isn't stiff enough. Print one against each of the two brackets
+  bounding the gap; they meet with a small gap in the middle rather than
+  needing to align perfectly.
+
 ## Layout
 
 ```
@@ -20,6 +60,7 @@ scad/
   wall_mirrored.scad  the wall bracket, right half (mirror image of wall.scad)
   shelf.scad          the slide-in shelf panel
   tray.scad           flat-top tray that rests on the dowels, channels on the underside cradle each one
+  half_shelf.scad     reinforced half-length shelf panel, cantilevered from one bracket's slot
 export/               generated STLs (gitignored, run `make` to produce)
 ```
 
@@ -71,3 +112,14 @@ Edit `scad/lib/params.scad`:
 - `shelf_thickness` — thickness of your printed shelf panel stock; sizes
   both the slot and the panel.
 - `shelf_slot_depth` — how far the panel is captured inside each bracket.
+- `shelf_corner_radius` — corner rounding on both `shelf.scad` and
+  `half_shelf.scad`.
+- `tray_wrap_depth` — how far the tray's outer clips wrap past the dowel
+  centerline; increase (toward the dowel radius) for a tighter snap.
+- `half_shelf_length` / `half_shelf_taper_length` / `half_shelf_root_height`
+  — tune `half_shelf.scad` (a shorter, reinforced shelf panel that
+  cantilevers from a single bracket's slot instead of spanning
+  wall-to-wall — e.g. for a laptop resting across two of these bridging
+  a gap) to your span and desired stiffness; `half_shelf_leg_drop` adds
+  an optional support leg down to the desk if the cantilever alone isn't
+  stiff enough.

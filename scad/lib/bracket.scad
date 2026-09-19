@@ -13,6 +13,29 @@ module rounded_box(size, r) {
     }
 }
 
+// Thin slab spanning [0,0,0] to size, with all 4 vertical (Z-axis)
+// edges rounded to radius r; top and bottom stay flat. Used for panels
+// too thin for rounded_box's spherical corner fillets to make sense.
+module rounded_slab(size, r) {
+    linear_extrude(height = size[2])
+        offset(r = r)
+            offset(delta = -r)
+                square([size[0], size[1]]);
+}
+
+// Slab spanning [0,0,0] to [length, width, thickness] with only the two
+// far-end (X = length) corners rounded to radius r; the near end (X=0)
+// stays square. Used where the near end is captured in a slot and the
+// far end is the exposed, handled edge.
+module rounded_tip_slab(length, width, thickness, r) {
+    linear_extrude(height = thickness)
+        hull() {
+            square([length - r, width]);
+            translate([length - r, r]) circle(r = r);
+            translate([length - r, width - r]) circle(r = r);
+        }
+}
+
 // A blind bore of diameter d and depth `depth`, aligned along +Z from
 // z=0 (blind end) to z=depth (opening), with a concave fillet of radius
 // `fillet_r` rounding the edge where the bore meets the opening face.

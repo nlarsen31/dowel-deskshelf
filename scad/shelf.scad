@@ -6,10 +6,10 @@
 // Render:
 //   openscad -o export/shelf.stl scad/shelf.scad
 
-include <lib/params.scad>
+include <lib/bracket.scad>
 
 module shelf_panel() {
-    cube([shelf_length, shelf_width, shelf_thickness]);
+    rounded_slab([shelf_length, shelf_width, shelf_thickness], shelf_corner_radius);
 }
 
 shelf_panel();
