@@ -19,6 +19,7 @@ scad/
   wall.scad           the wall bracket, left half
   wall_mirrored.scad  the wall bracket, right half (mirror image of wall.scad)
   shelf.scad          the slide-in shelf panel
+  tray.scad           flat-top tray that rests on the dowels, channels on the underside cradle each one
 export/               generated STLs (gitignored, run `make` to produce)
 ```
 
