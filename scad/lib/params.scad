@@ -28,7 +28,7 @@ dowel_spacing  = dowel_bore_d + dowel_min_wall; // center-to-center
 // "depth" is how far the block sticks out from the wall (front-back).
 // Width is derived so all dowels fit with the margins/spacing above.
 wall_bracket_width  = (num_dowels - 1) * dowel_spacing + dowel_bore_d + 2 * dowel_edge_margin;
-wall_bracket_height = 100;
+wall_bracket_height = 140;
 wall_bracket_depth  = dowel_bore_depth + 10; // bore depth + material behind it
 corner_radius       = 4; // fillet radius on all 12 edges of the block
 
@@ -79,4 +79,4 @@ foot_recess_depth = 1.5;  // just enough to seat the foot, not a structural pock
 foot_inset        = 10;   // distance from bottom-face edges to foot centers
 
 // --- Print-friendliness ---
-$fn = 32; // circle smoothness for previews/renders
+$fn = 64; // circle smoothness for previews/renders
