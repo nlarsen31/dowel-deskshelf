@@ -39,6 +39,11 @@ physically to assemble the shelf.
   row rather than just resting loose. Sized to fit a typical 256x256mm
   print bed, so a long run is covered by printing multiple trays end to
   end.
+- **`cord_tray.scad`** — a skinny tray covering only the first couple of
+  dowels (`cord_tray_dowels`), clipped on like `tray.scad`, with a fin
+  hanging from its low-Y edge. The fin has hooked slots: a cord slides in from
+  below and hooks sideways into a pocket so it can't fall out, and
+  oversized plugs stay outside since only the cord passes the entry.
 - **`half_shelf.scad`** — a shorter, reinforced version of the shelf
   panel for spots where a full wall-to-wall panel doesn't make sense —
   e.g. supporting a laptop that sits across a gap between two brackets.
@@ -60,6 +65,7 @@ scad/
   wall_mirrored.scad  the wall bracket, right half (mirror image of wall.scad)
   shelf.scad          the slide-in shelf panel
   tray.scad           flat-top tray that rests on the dowels, channels on the underside cradle each one
+  cord_tray.scad      skinny tray with a hanging fin of hooked cord slots
   half_shelf.scad     reinforced half-length shelf panel, cantilevered from one bracket's slot
 export/               generated STLs (gitignored, run `make` to produce)
 ```

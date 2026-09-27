@@ -64,11 +64,22 @@ tray_top_thickness = 4;   // material above the top of the dowels
 tray_wrap_depth    = 6;   // how far the clips on the two OUTER dowels extend below the
                           // dowel centerline (keep < dowel radius, ~9.7mm, or the channel
                           // becomes a closed tunnel; ~6 gives a snap-fit)
-tray_clip_wall     = 3;   // plastic around each outer dowel's clip
 tray_corner_radius = 2;   // rounds the tray's edges
 
 tray_width  = wall_bracket_width; // spans the same dowel row as the brackets
 tray_height = dowel_bore_d / 2 + tray_top_thickness; // flat slab; clips hang below it
+
+// --- Cord tray ---
+// A narrow tray covering only the first few dowels, with a fin hanging
+// below its low-Y edge that has hooked slots for holding cords.
+cord_tray_length   = 100; // along the dowels (X)
+cord_tray_dowels   = 2;   // how many dowels (from the low-Y side) it covers
+cord_fin_drop      = 30;  // how far the fin hangs below the dowel centerline
+cord_fin_thickness = 8;   // fin thickness along Y (= pocket depth)
+cord_slot_count    = 5;   // number of cord slots along the length
+cord_slot_d        = 8;   // cord pocket diameter
+cord_slot_wall     = 4;   // plastic left below each pocket
+cord_slot_neck     = 5;   // entry width at the bottom (only the cord passes, not the plug)
 
 // --- Half shelf (laptop support) ---
 // A shorter, reinforced version of the shelf panel: slides into one
